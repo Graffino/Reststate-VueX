@@ -188,6 +188,19 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
         state.records = state.records.filter(r => r.id !== record.id);
       },
 
+      REMOVE_RELATED: (state, recordInfo) => {
+        console.log('recordInfo', recordInfo);
+        const { related } = state;
+        const { parent, relationship, id } = recordInfo;
+        const existingRecord = related.find(matches({ parent, relationship }));
+
+        if (existingRecord) {
+          existingRecord.relatedIds = existingRecord.relatedIds.filter(
+            r => r.id !== id,
+          );
+        }
+      },
+
       SET_LINKS: (state, links) => {
         state.links = links || {};
       },
@@ -384,6 +397,16 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
       delete({ commit }, record) {
         return client.delete(record).then(() => {
           commit('REMOVE_RECORD', record);
+        });
+      },
+
+      deleteRelated({ commit }, params) {
+        //i need information about the parent because i have to look for the entry
+        const { id, parent, relationship = resourceName } = params;
+        const record = { id };
+        return client.delete(record).then(() => {
+          commit('REMOVE_RECORD', record);
+          commit('REMOVE_RELATED', { parent, relationship, id });
         });
       },
 
