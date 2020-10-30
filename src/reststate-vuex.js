@@ -169,6 +169,17 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
         }
       },
 
+      ADD_RELATED: (state, { id, params }) => {
+        const { related } = state;
+        const relationshipIndex = getRelationshipIndex(params);
+        const existingRecord = related.find(matches(relationshipIndex));
+        if (existingRecord) {
+          existingRecord.relatedIds.push(id);
+        } else {
+          related.push(Object.assign({ relatedIds: [id] }, relationshipIndex));
+        }
+      },
+
       STORE_FILTERED: (state, { matchedIds, params }) => {
         const { filtered } = state;
 
@@ -328,6 +339,20 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
         return client.create(recordData).then(result => {
           commit('STORE_RECORD', result.data);
           commit('STORE_LAST_CREATED', result.data);
+        });
+      },
+
+      createRelated(
+        { commit },
+        { recordData, parent, relationship = resourceName },
+      ) {
+        return client.create(recordData).then(result => {
+          commit('STORE_RECORD', result.data);
+          commit('STORE_LAST_CREATED', result.data);
+          commit('ADD_RELATED', {
+            id: result.data.id,
+            params: { parent, relationship },
+          });
         });
       },
 
