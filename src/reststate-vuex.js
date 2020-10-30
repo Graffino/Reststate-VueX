@@ -200,7 +200,6 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
       },
 
       REMOVE_RELATED: (state, recordInfo) => {
-        console.log('recordInfo', recordInfo);
         const { related } = state;
         const { parent, relationship, id } = recordInfo;
         const existingRecord = related.find(matches({ parent, relationship }));
