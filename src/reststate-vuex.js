@@ -426,7 +426,6 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
       },
 
       deleteRelated({ commit }, params) {
-        //i need information about the parent because i have to look for the entry
         const { id, parent, relationship = resourceName } = params;
         const record = { id };
         return client.delete(record).then(() => {
