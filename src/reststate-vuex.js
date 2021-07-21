@@ -57,32 +57,25 @@ const storeIncluded = ({ commit, dispatch }, result) => {
           if (!relationship.data || relationship.data.length === 0) {
             return;
           }
-          const data = Array.isArray(relationship.data)
-            ? relationship.data
-            : [relationship.data];
 
-          //the included record might have different types in case of polymorphic relationships
-          const relatedObjects = data.reduce((accumulator, relatedRecord) => {
-            const type = relatedRecord.type;
-            if (accumulator[type]) {
-              accumulator[type].push(relatedRecord.id);
-            } else {
-              accumulator[type] = [relatedRecord.id];
-            }
-            return accumulator;
-          }, {});
-
-          Object.entries(relatedObjects).map(([type, relatedIds]) => {
-            const options = {
-              relatedIds,
-              params: {
-                parent: getResourceIdentifier(primaryRecord),
-                relationship: relationshipName,
-              },
-            };
-            const action = `${type}/storeRelated`;
-            dispatch(action, options, { root: true });
-          });
+          const type = getRelationshipType(relationship);
+          let relatedIds;
+          if (Array.isArray(relationship.data)) {
+            relatedIds = relationship.data.map(
+              relatedRecord => relatedRecord.id,
+            );
+          } else {
+            ({ id: relatedIds } = relationship.data);
+          }
+          const options = {
+            relatedIds,
+            params: {
+              parent: getResourceIdentifier(primaryRecord),
+              relationship: relationshipName,
+            },
+          };
+          const action = `${type}/storeRelated`;
+          dispatch(action, options, { root: true });
         });
       }
     });
