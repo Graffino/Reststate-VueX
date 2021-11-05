@@ -234,14 +234,17 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
           .catch(handleError(commit));
       },
 
-      loadById({ commit, dispatch }, { id, options }) {
+      loadById({ commit, dispatch }, { id, options, overrideRecord = true }) {
         commit('SET_STATUS', STATUS_LOADING);
         return client
           .find({ id, options })
           .then(results => {
             commit('SET_STATUS', STATUS_SUCCESS);
-            commit('STORE_RECORD', results.data);
-            commit('STORE_META', results.meta);
+            if (overrideRecord) {
+              commit('STORE_RECORD', results.data);
+              commit('STORE_META', results.meta);
+            }
+
             storeIncluded({ commit, dispatch }, results);
           })
           .catch(handleError(commit));
