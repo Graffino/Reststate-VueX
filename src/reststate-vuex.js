@@ -355,6 +355,7 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
             id: result.data.id,
             params: { parent, relationship },
           });
+          return result;
         });
       },
 
