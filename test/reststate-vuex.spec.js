@@ -32,6 +32,50 @@ describe('resourceModule()', function () {
     });
   });
 
+  describe('filters-and-pagination', () => {
+    const firstPage = [
+      {
+        type: 'widget',
+        id: '1',
+        attributes: {
+          title: 'Foo',
+        },
+      },
+      {
+        type: 'widget',
+        id: '2',
+        attributes: {
+          title: 'Bar',
+        },
+      },
+    ];
+
+    const secondPage = [
+      {
+        type: 'widget',
+        id: '3',
+        attributes: {
+          title: 'Baz',
+        },
+      },
+      {
+        type: 'widget',
+        id: '4',
+        attributes: {
+          title: 'Qux',
+        },
+      },
+    ];
+
+    const filter = {
+      status: 'draft',
+    };
+
+    it('my-test', () => {
+      expect(2 + 2).toBe(4);
+    });
+  });
+
   describe('loading from the server', () => {
     describe('all records', () => {
       const records = [
