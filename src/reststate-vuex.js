@@ -360,7 +360,7 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
       },
 
       update({ commit, dispatch, getters }, record) {
-        return client.update(record).then(() => {
+        return client.update(record).then(response => {
           const oldRecord = getters.byId({ id: record.id });
 
           // remove old relationships first
@@ -425,6 +425,7 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
               }
             }
           }
+          return response;
         });
       },
 
