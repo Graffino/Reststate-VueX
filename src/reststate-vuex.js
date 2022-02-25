@@ -174,7 +174,6 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
         const relationshipIndex = getRelationshipIndex(params);
         const existingRecord = related.find(matches(relationshipIndex));
         if (existingRecord) {
-          existingRecord.relatedIds.push(id);
           Array.isArray(existingRecord.relatedIds)
             ? existingRecord.relatedIds.push(id)
             : (existingRecord.relatedIds = [existingRecord.relatedIds, id]);
